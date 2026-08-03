@@ -1,69 +1,16 @@
-# 3mtt-final-project
-3MTT final project QR ATTANDANCE SYSTEM 
-# QR Attendance System 
-A modern QR code-based Attendance Management System built with *React*, *Node.js*The system enables administrators (Teachers) to generate QR codes for attendance sessions,
-while students scan the QR code using their mobile devices to mark attendance securely and efficiently.
-# Features
-### Admin
-. Secure Login 
-. Dashboard
-. Create Attendance Session 
-. Generate QR Code
-. View Attendance Records 
-. Search & Filter Attendance 
-. Export Attendance (CSV/PDF)
-. Manage Student
+# React + Vite
 
-### Student 
-. Login 
-. Scan QR Code 
-. Mark Attendance
-. View Attendance History
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Tech Stack
-### Frontend
-. React (Vite)
-. React Router DOM
-. Tailwind CSS
-. Html5-qrcode
-. Axios
-. qrcode.react
-. React Icons
+Currently, two official plugins are available:
 
-### Backend
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- JWT Authentication
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
+## React Compiler
 
----
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## 📂 Project Structure
+## Expanding the ESLint configuration
 
-
-qr-attendance-system/
-
-client/
-│
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── context/
-│   ├── services/
-│   ├── assets/
-│   ├── App.jsx
-│   └── main.jsx
-│
-└── package.json
-
-server/
-│
-├── controllers/
-├── routes/
-├── models/
-├── middleware/
-├── config/
-├── server.js
-└── package.json
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
