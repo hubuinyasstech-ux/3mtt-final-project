@@ -1,7 +1,10 @@
-import { supabase } from "../service/supabase";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { supabase } from "../service/supabase";
+
 export default function Register() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = React.useState({
     fullName: "",
     matricNumber: "",
@@ -9,127 +12,191 @@ export default function Register() {
     password: "",
     confirmPassword: "",
   });
-  //Supabase client initialization
 
   const [agree, setAgree] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
+
+    setError("");
+
     if (!agree) {
-      alert("Please accept the Terms and Conditions. ");
+      setError("Please accept the Terms and Conditions.");
       return;
     }
+
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match.");
       return;
     }
 
-    //User with Supabase Authentication
-    const { data, error } = await supabase.auth.signUp({
-      email: formData.email,
-      password: formData.password,
-    });
-    if (error) {
-      alert(error.message);
-      return;
-    }
-    if (!data.user) {
-      alert("Unable to create user. Please try again.");
-    }
-    // save additional user data to the "users" table in Supabase
-    const { error: dbError } = await supabase.from("users").insert([
-      {
-        id: data.user.id,
-        full_name: formData.fullName,
-        matric_number: formData.matricNumber,
-        email: formData.email,
-      },
-    ]);
-
-    if (dbError) {
-      alert(dbError.message);
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters.");
       return;
     }
 
-    alert(
-      "Registration successful! Please check your email to confirm your account.",
-    );
-    setFormData({
-      fullName: "",
-      matricNumber: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
+    setLoading(true);
 
-    setAgree(false);
+    try {
+      const { data, error: authError } = await supabase.auth.signUp({
+        email: formData.email.trim(),
+        password: formData.password,
+        options: {
+          data: {
+            full_name: formData.fullName,
+            matric_number: formData.matricNumber,
+          },
+        },
+      });
+
+      if (authError) {
+        throw authError;
+      }
+
+      if (!data || !data.user) {
+        throw new Error("Registration failed. Please try again.");
+      }
+
+      /*
+        IMPORTANT:
+
+        We DO NOT insert into public.users here.
+
+        The Supabase database trigger we created will
+        automatically create the public.users record.
+      */
+
+      alert(
+        "Registration successful! Please check your email to confirm your account.",
+      );
+
+      setFormData({
+        fullName: "",
+        matricNumber: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+
+      setAgree(false);
+
+      navigate("/");
+    } catch (err) {
+      console.error("Registration error:", err);
+
+      setError(err.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-200">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-96">
-        <h1 className="text-3xl font-bold text-center mb-6">
-          Register 3MTT Attendance
-        </h1>
+    <div className="min-h-screen flex items-center justify-center bg-blue-200 px-4 py-8">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <h1 className="text-3xl font-bold text-center mb-2">Register</h1>
+
+        <p className="text-center text-gray-500 mb-6">
+          3MTT QR Attendance System
+        </p>
+
+        {/* Error message */}
+        {error && (
+          <div className="bg-red-100 border border-red-300 text-red-700 p-3 rounded-lg mb-5 text-sm">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="fullName"
-            placeholder="Full Name"
-            value={formData.fullName}
-            onChange={handleChange}
-            className="w-full border p-3 rounded mb-4 "
-            required
-          />
-          <input
-            type="text"
-            name="matricNumber"
-            value={formData.matricNumber}
-            onChange={handleChange}
-            placeholder="3MTT Matric No "
-            className="w-full border p-3 rounded mb-4"
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full border p-3 rounded mb-4 "
-            required
-          />
+          {/* Full Name */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Full Name</label>
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full border p-3 rounded mb-4 "
-            required
-          />
+            <input
+              type="text"
+              name="fullName"
+              placeholder="Enter your full name"
+              value={formData.fullName}
+              onChange={handleChange}
+              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
 
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className="w-full border p-3 rounded mb-4 "
-            required
-          />
+          {/* Matric Number */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              3MTT Matric Number
+            </label>
 
-          <div className="flex items-start gap-2 mb-5">
+            <input
+              type="text"
+              name="matricNumber"
+              placeholder="Enter your matric number"
+              value={formData.matricNumber}
+              onChange={handleChange}
+              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Email</label>
+
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Password</label>
+
+            <input
+              type="password"
+              name="password"
+              placeholder="Create a password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          {/* Confirm Password */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Confirm Password
+            </label>
+
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          {/* Terms */}
+          <div className="flex items-start gap-2">
             <input
               type="checkbox"
               id="agree"
@@ -138,31 +205,30 @@ export default function Register() {
               className="mt-1"
             />
 
-            <label htmlFor="agree" className="text-sm">
+            <label htmlFor="agree" className="text-sm text-gray-700">
               I agree to the{" "}
-              <span className="text-blue-600 cursor-pointer">
-                {" "}
-                Terms & Conditions
-              </span>
+              <span className="text-blue-600">Terms & Conditions</span>
             </label>
           </div>
 
+          {/* Register */}
           <button
             type="submit"
-            disabled={!agree}
-            className={`w-full py-3 rounded text-white transition ${
-              agree
-                ? "bg-green-600 hover:bg-green-900"
+            disabled={!agree || loading}
+            className={`w-full py-3 rounded-lg text-white font-semibold ${
+              agree && !loading
+                ? "bg-green-600 hover:bg-green-700"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
           >
-            Register
+            {loading ? "Creating account..." : "Create Account"}
           </button>
         </form>
 
-        <p className="text-sm text-center mt-4">
+        {/* Login */}
+        <p className="text-sm text-center mt-5 text-gray-600">
           Already have an account?{" "}
-          <Link to="/" className="text-blue-600">
+          <Link to="/" className="text-blue-600 font-medium hover:underline">
             Login
           </Link>
         </p>
