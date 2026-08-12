@@ -10,6 +10,7 @@ export default function Login() {
     password: "",
   });
 
+  const [showPassword, setShowPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
 
@@ -34,6 +35,13 @@ export default function Login() {
         });
 
       if (loginError) {
+        if (
+          loginError.message?.toLowerCase().includes("invalid login credentials")
+        ) {
+          throw new Error(
+            "Invalid email or password. If you recently registered, please check your email inbox to confirm your account first, or turn off 'Confirm Email' in Supabase Auth Settings."
+          );
+        }
         throw loginError;
       }
 
@@ -86,21 +94,38 @@ export default function Login() {
             />
           </div>
 
-          {/* Password */}
+          {/* Password with Toggle */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <Link
+                to="/forgot-password"
+                className="text-xs font-semibold text-blue-600 hover:underline"
+              >
+                Forgot Password?
+              </Link>
+            </div>
 
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full border border-gray-300 p-3 pr-12 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs font-bold hover:text-gray-700 focus:outline-none px-2 py-1 bg-gray-100 rounded"
+              >
+                {showPassword ? "HIDE" : "SHOW"}
+              </button>
+            </div>
           </div>
 
           {/* Login Button */}

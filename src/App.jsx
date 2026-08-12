@@ -2,6 +2,8 @@ import { Routes, Route } from "react-router-dom";
 import ScanQR from "./pages/ScanQR";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Dashboard from "./pages/Dashboard";
 import Attendance from "./pages/Attendance";
 import GenerateQR from "./pages/GenerateQR";
@@ -16,6 +18,8 @@ function App() {
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/Register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route
         path="/dashboard"
         element={

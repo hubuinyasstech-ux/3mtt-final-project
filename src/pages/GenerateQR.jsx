@@ -4,11 +4,13 @@ import { Link } from "react-router-dom";
 import { supabase } from "../service/supabase";
 
 export default function GenerateQR() {
+  const [title, setTitle] = useState("3MTT Class Session");
   const [sessionId, setSessionId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const generateSession = async () => {
+  const generateSession = async (e) => {
+    e?.preventDefault();
     setLoading(true);
     setError("");
     setSessionId("");
@@ -21,7 +23,7 @@ export default function GenerateQR() {
         .insert([
           {
             session_code: newSessionCode,
-            title: "3MTT Attendance",
+            title: title.trim() || "3MTT Attendance Session",
           },
         ])
         .select()
@@ -34,26 +36,30 @@ export default function GenerateQR() {
       setSessionId(data.session_code);
     } catch (err) {
       console.error("QR session error:", err);
-      setError(err.message || "Unable to create attendance session.");
+      setError(err.message || "Unable to create attendance session in database.");
     } finally {
       setLoading(false);
     }
   };
 
+  const qrPayload = JSON.stringify({
+    session_code: sessionId,
+    title: title || "3MTT Class",
+  });
+
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-blue-700 text-white px-6 py-4">
+      <header className="bg-purple-800 text-white px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">3MTT QR Attendance</h1>
-
-            <p className="text-blue-100 text-sm">Attendance QR Generator</p>
+            <p className="text-purple-100 text-sm">Instructor QR Generator</p>
           </div>
 
           <Link
             to="/dashboard"
-            className="bg-white text-blue-700 px-4 py-2 rounded-lg font-medium hover:bg-blue-50"
+            className="bg-white text-purple-800 px-4 py-2 rounded-lg font-medium hover:bg-purple-50 transition"
           >
             Dashboard
           </Link>
@@ -62,69 +68,88 @@ export default function GenerateQR() {
 
       {/* Main */}
       <main className="max-w-2xl mx-auto p-6">
-        <div className="bg-white rounded-xl shadow-lg p-6 text-center">
-          <h2 className="text-2xl font-bold text-gray-800">
-            Generate Attendance QR Code
+        <div className="bg-white rounded-xl shadow-lg p-6 text-center border">
+          <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+            Teacher Session Tools
+          </span>
+
+          <h2 className="text-2xl font-bold text-gray-800 mt-2">
+            Generate Session QR Code
           </h2>
 
-          <p className="text-gray-500 mt-2 mb-6">
-            Generate a unique QR code for an attendance session.
+          <p className="text-gray-500 mt-1 mb-6 text-sm">
+            Create an official attendance session. Display this QR code on screen or print it for students to scan.
           </p>
 
-          {/* Generate Button */}
-          <button
-            onClick={generateSession}
-            disabled={loading}
-            className={`w-full py-3 rounded-lg font-semibold text-white transition ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
-            }`}
-          >
-            {loading ? "Creating Session..." : "Generate QR Code"}
-          </button>
+          <form onSubmit={generateSession} className="space-y-4 text-left">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Course / Session Title
+              </label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="e.g. Frontend Web Development - Week 4"
+                className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                required
+              />
+            </div>
+
+            {/* Generate Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-3 rounded-lg font-semibold text-white transition shadow ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-purple-600 hover:bg-purple-700"
+              }`}
+            >
+              {loading ? "Creating Session..." : "⚡ Generate QR Code"}
+            </button>
+          </form>
 
           {/* Error */}
           {error && (
             <div className="mt-5 bg-red-100 border border-red-300 text-red-700 p-4 rounded-lg text-left">
               <p className="font-semibold">Error creating attendance session</p>
-
               <p className="mt-1 text-sm">{error}</p>
             </div>
           )}
 
-          {/* QR Code */}
+          {/* Generated QR Code Display */}
           {sessionId && (
-            <div className="mt-8">
-              <div className="flex justify-center">
-                <div className="bg-white p-5 border rounded-lg">
-                  <QRCode value={sessionId} size={250} />
-                </div>
+            <div className="mt-8 border-t pt-6">
+              <div className="inline-block bg-white p-6 border-2 border-purple-200 rounded-2xl shadow-md">
+                <QRCode value={qrPayload} size={240} />
               </div>
 
-              <h3 className="font-bold text-gray-800 mt-6">
-                Attendance Session
+              <h3 className="font-bold text-gray-800 mt-5 text-lg">
+                Active Session: {title}
               </h3>
 
-              <p className="bg-gray-100 p-3 rounded-lg mt-2 break-all">
-                {sessionId}
+              <div className="inline-flex items-center gap-2 bg-purple-50 text-purple-900 border border-purple-200 px-4 py-2 rounded-lg mt-3 font-mono font-bold text-sm">
+                <span>Code:</span>
+                <span className="text-purple-700">{sessionId}</span>
+              </div>
+
+              <p className="text-sm text-emerald-600 font-semibold mt-4 flex items-center justify-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Live Session Ready for Student Scans
               </p>
 
-              <p className="text-sm text-green-600 mt-4">
-                Attendance session created successfully.
-              </p>
-
-              <p className="text-sm text-gray-500 mt-2">
-                Students can now scan this QR code.
+              <p className="text-xs text-gray-500 mt-1">
+                Students scan this QR code using their phone camera on the Scan QR page to mark attendance.
               </p>
             </div>
           )}
 
           <Link
             to="/attendance"
-            className="block mt-6 text-blue-600 hover:underline"
+            className="block mt-6 text-purple-600 font-medium hover:underline text-sm"
           >
-            ← Back to Attendance
+            ← View Attendance Log Records
           </Link>
         </div>
       </main>

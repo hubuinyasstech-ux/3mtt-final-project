@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function StudentTable({ students = [], onEdit, onDelete }) {
   return (
     <div className="overflow-x-auto">
