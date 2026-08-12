@@ -1,85 +1,256 @@
-# React + Vite
+# QR Attendance System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A school management web application that uses QR codes to simplify student attendance.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Student registration and login
+Supabase authentication
+Student profiles
+Dashboard
+QR-code generation
+QR-code scanning
+Attendance sessions and records
+Responsive interface
+User roles
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+React + Vite
+React Router DOM
+Tailwind CSS
+Supabase Auth + PostgreSQL
+react-qr-code for QR generation
+html5-qrcode for QR scanning
 
-## Expanding the ESLint configuration
+## Main Pages
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Login
+Register
+Dashboard
+Attendance
+GenerateQR
+ScanQR
 
-## Project setup (3MTT QR Attendance)
+## Project Structure
 
-1. Copy `.env.example` to `.env` or `.env.local` and fill in your Supabase project values:
+src/
+├── components/
+├── context/
+├── pages/
+│ ├── Login.jsx
+│ ├── Register.jsx
+│ ├── Dashboard.jsx
+│ ├── Attendance.jsx
+│ ├── GenerateQR.jsx
+│ └── ScanQR.jsx
+├── services/
+│ └── supabase.js
+├── App.jsx
+├── index.jsx
+└── index.css
 
-```bash
-cp .env.example .env
-# then edit .env and set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
-```
+## Installation
 
-2. Install and run:
+Install dependencies:
 
-```bash
 npm install
+Required packages include:
+npm install react-router-dom @supabase/supabase-js react-qr-code html5-qrcode
+
+## Supabase Configuration
+
+Create a .env file in the project root:
+
+VITE_SUPABASE_URL=YOUR_SUPABASE_PROJECT_URL
+VITE_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+
+Example Supabase client:
+
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+export const supabase = createClient(
+supabaseUrl,
+supabaseAnonKey
+);
+
+Do not commit .env or expose a Supabase service-role key in the React
+frontend.
+
+## Database Structure
+
+## Supabase Auth
+
+Authentication credentials are managed by:
+
+## auth.users
+
+Passwords must not be stored in public.users.
+
+### public.users
+
+Recommended profile table:
+
+Column Type Required Purpose
+
+id uuid Yes Matches auth.users.id
+full_name text Yes Student name
+matric_number text Yes Student matric number
+email text Yes Student email
+role text Yes Default: student
+created_at timestamptz Yes Registration time
+
+## Registration
+
+Registration uses Supabase Auth:
+
+const { data, error } = await supabase.auth.signUp({
+email: formData.email,
+password: formData.password,
+options: {
+data: {
+full_name: formData.fullName,
+matric_number: formData.matricNumber,
+},
+},
+});
+
+The password is handled by Supabase Auth. The profile table stores the
+student's profile information, not the password.
+
+## Attendance Workflow
+
+Student Login
+↓
+Attendance Session
+↓
+QR Code Generated
+↓
+Student Scans QR Code
+↓
+Attendance Verified
+↓
+Attendance Saved to Supabase
+↓
+Dashboard / Attendance Records
+
+## Run the Project
+
+Start the development server:
 npm run dev
-```
 
-3. Database schema (Supabase) - create these tables or use the following SQL in the SQL editor:
+Vite normally runs at:
+To allow other devices on the same network to access the app:
+npm run dev -- --host
+Production Build
+npm run build
+Preview the build:
+npm run preview
 
-```sql
-create table if not exists public.students (
-	id bigserial primary key,
-	full_name text,
-	matric_number text,
-	email text,
-	inserted_at timestamptz default now()
-);
-```
+## Troubleshooting
 
-```sql
-create table if not exists public.attendance (
-	id bigserial primary key,
-	student_id bigint references public.students(id),
-	status text,
-	created_at timestamptz default now()
-);
-```
+Registration succeeds but public.users is empty
 
--- attendance_sessions (used by GenerateQR)
+Check:
+The user exists in Supabase Authentication → Users.
+The profile creation code or database trigger is working.
+auth.users.id matches public.users.id.
+full_name and matric_number are supplied.
+RLS policies permit the required operation.
+Check Auth:
 
-```sql
-create table if not exists public.attendance_sessions (
-  id bigserial primary key,
-  session_code text unique,
-  title text,
-  created_at timestamptz default now()
-);
-```
+select
+id,
+email,
+raw_user_meta_data,
+created_at
+from auth.users
+where email = 'YOUR_EMAIL';
 
-4. App notes:
+Check the profile:
+select
+id,
+full_name,
+matric_number,
+email,
+role,
+created_at
+from public.users
+where email = 'YOUR_EMAIL';
 
-- The app expects `students` and `attendance` tables (see SQL above). Optionally `attendance_sessions` is used by GenerateQR.
-- Supabase keys are loaded from `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in your `.env`.
-- Pages implemented: Login, Register, Dashboard, Attendance, ScanQR, GenerateQR, Students.
+Error 23502: null value in column "full_name"
+This means a profile insert was attempted without full_name.
+Make sure registration sends:
+full_name: formData.fullName
+and that any database function reads the Auth metadata correctly.
+Login says "Invalid login credentials"
+Check:
+Email and password are correct.
+The user exists in Supabase Auth.
+The app is connected to the correct Supabase project.
+Email confirmation settings are configured appropriately.
 
-5. Git / deploy notes
+Login says "Unable to fetch"
+The Auth account can exist even when its row in public.users is
+missing.
 
-- Create a branch, commit your changes, and push:
+### Verify
 
-```bash
-git checkout -b feature/complete-app
-git add .
-git commit -m "feat: finish core app pages, auth and supabase integration"
-git push -u origin feature/complete-app
-```
+auth.users.id === public.users.id
+Also check the browser console for the exact Supabase error.
 
-- I can prepare a PR description if you want; tell me the branch name and target.
+Password column exists in public.users
+Passwords should be managed by Supabase Auth. The application should not
+store plain-text passwords in public.users.
 
-If you want, I can also produce additional SQL for `attendance_sessions` features or add CI workflow to build on push.
+If the old password column is no longer needed:
+alter table public.users
+drop column if exists password;
+Only run this after confirming no application code depends on that
+column.
+
+## Security
+
+Never store plain-text passwords in public.users.
+Use Supabase Auth for authentication.
+Never put a service-role key in the React frontend.
+Keep .env out of Git.
+Enable and configure Row Level Security (RLS).
+Restrict attendance operations to authenticated users.
+Validate user input before database operations.
+Final Project Checklist
+
+## Registration works
+
+User appears in Supabase Auth
+User profile appears in public.users
+Password is not stored in public.users
+Login works
+Dashboard loads
+QR generation works
+QR scanning works
+Attendance is saved
+Attendance records display
+Logout works
+No major browser-console errors
+npm run build succeeds
+
+## Future Improvements
+
+Admin dashboard
+Lecturer/teacher accounts
+Attendance reports
+Course/date filtering
+PDF/Excel export
+Student attendance history
+Statistics and charts
+Role-based access control
+Email notifications
+
+## Author
+
+QR Attendance System --- Final Project
+Built with React, Vite, Tailwind CSS, and Supabase.
