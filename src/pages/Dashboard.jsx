@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 export default function Dashboard() {
   return (
@@ -9,17 +10,11 @@ export default function Dashboard() {
           <h1 className="text-2xl font-bold">3MTT QR Attendance</h1>
           <p className="text-blue-100 text-sm">Student Dashboard</p>
         </div>
-        <button
-          onClick={() => alert("Logout will b connected to Supabasse later.")}
-          className="bg-white text-blue-700 px-4 py-2 rounded-lg
-         font-medium hover:bg-blue-50"
-        >
-          Logout
-        </button>
+        <LogoutButton />
       </header>
 
       {/* Main Content */}
-      <main className="p-6 max-w-7xlmmx-auto">
+      <main className="p-6 max-w-7xl mx-auto">
         {/* Welcome */}
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-800">
@@ -65,14 +60,14 @@ export default function Dashboard() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Link
-              to="./Attendance.jsx"
+              to="/attendance"
               className="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg text-center font-medium transition"
             >
               View Attendance
             </Link>
 
             <Link
-              to="/scan"
+              to="/ScanQR"
               className="bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg font-medium transition text-center"
             >
               Scan QR Code
@@ -150,5 +145,24 @@ export default function Dashboard() {
         </div>
       </main>
     </div>
+  );
+}
+
+function LogoutButton() {
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handle = async () => {
+    await signOut();
+    navigate("/");
+  };
+
+  return (
+    <button
+      onClick={handle}
+      className="bg-white text-blue-700 px-4 py-2 rounded-lg font-medium hover:bg-blue-50"
+    >
+      Logout
+    </button>
   );
 }

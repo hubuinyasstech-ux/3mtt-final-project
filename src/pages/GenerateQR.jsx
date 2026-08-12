@@ -1,14 +1,43 @@
 import { useState } from "react";
 import QRCode from "react-qr-code";
 import { Link } from "react-router-dom";
+import { supabase } from "../service/supabase";
 
 export default function GenerateQR() {
   const [sessionId, setSessionId] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const generateSession = () => {
-    const newSessionId = "3MTT-" + Date.now().toString(36).toUpperCase();
+  const generateSession = async () => {
+    setLoading(true);
+    setError("");
+    setSessionId("");
 
-    setSessionId(newSessionId);
+    try {
+      const newSessionCode = "3MTT-" + Date.now().toString(36).toUpperCase();
+
+      const { data, error: dbError } = await supabase
+        .from("attendance_sessions")
+        .insert([
+          {
+            session_code: newSessionCode,
+            title: "3MTT Attendance",
+          },
+        ])
+        .select()
+        .single();
+
+      if (dbError) {
+        throw dbError;
+      }
+
+      setSessionId(data.session_code);
+    } catch (err) {
+      console.error("QR session error:", err);
+      setError(err.message || "Unable to create attendance session.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,16 +68,32 @@ export default function GenerateQR() {
           </h2>
 
           <p className="text-gray-500 mt-2 mb-6">
-            Generate a unique QR code for today's attendance session.
+            Generate a unique QR code for an attendance session.
           </p>
 
+          {/* Generate Button */}
           <button
             onClick={generateSession}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
+            disabled={loading}
+            className={`w-full py-3 rounded-lg font-semibold text-white transition ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
-            Generate QR Code
+            {loading ? "Creating Session..." : "Generate QR Code"}
           </button>
 
+          {/* Error */}
+          {error && (
+            <div className="mt-5 bg-red-100 border border-red-300 text-red-700 p-4 rounded-lg text-left">
+              <p className="font-semibold">Error creating attendance session</p>
+
+              <p className="mt-1 text-sm">{error}</p>
+            </div>
+          )}
+
+          {/* QR Code */}
           {sessionId && (
             <div className="mt-8">
               <div className="flex justify-center">
@@ -65,8 +110,12 @@ export default function GenerateQR() {
                 {sessionId}
               </p>
 
-              <p className="text-sm text-gray-500 mt-4">
-                Students can now scan this QR code to mark their attendance.
+              <p className="text-sm text-green-600 mt-4">
+                Attendance session created successfully.
+              </p>
+
+              <p className="text-sm text-gray-500 mt-2">
+                Students can now scan this QR code.
               </p>
             </div>
           )}

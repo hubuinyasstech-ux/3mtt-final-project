@@ -1,8 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../service/supabase";
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = React.useState({
     fullName: "",
     matricNumber: "",
@@ -13,6 +15,7 @@ export default function Register() {
 
   const [agree, setAgree] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -24,45 +27,53 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setError("");
+
     if (!agree) {
-      alert("Please accept the Terms and Conditions.");
+      setError("Please accept the Terms and Conditions.");
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match.");
       return;
     }
 
     if (formData.password.length < 6) {
-      alert("Password must be at least 6 characters.");
+      setError("Password must be at least 6 characters.");
       return;
     }
 
     setLoading(true);
 
     try {
-      // Create the authentication account
-      const { data, error } = await supabase.auth.signUp({
+      const { data, error: authError } = await supabase.auth.signUp({
         email: formData.email.trim(),
         password: formData.password,
-
-        // Send student information to the database trigger
         options: {
           data: {
-            full_name: formData.fullName.trim(),
-            matric_number: formData.matricNumber.trim(),
+            full_name: formData.fullName,
+            matric_number: formData.matricNumber,
           },
         },
       });
 
-      if (error) {
-        throw error;
+      if (authError) {
+        throw authError;
       }
 
-      if (!data.user) {
-        throw new Error("Unable to create user account.");
+      if (!data || !data.user) {
+        throw new Error("Registration failed. Please try again.");
       }
+
+      /*
+        IMPORTANT:
+
+        We DO NOT insert into public.users here.
+
+        The Supabase database trigger we created will
+        automatically create the public.users record.
+      */
 
       alert(
         "Registration successful! Please check your email to confirm your account.",
@@ -77,77 +88,112 @@ export default function Register() {
       });
 
       setAgree(false);
-    } catch (error) {
-      console.error("Registration error:", error);
 
-      alert(error?.message || "Registration failed. Please try again.");
+      navigate("/");
+    } catch (err) {
+      console.error("Registration error:", err);
+
+      setError(err.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-200 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-blue-200 px-4 py-8">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-6">
-          Register 3MTT Attendance
-        </h1>
+        <h1 className="text-3xl font-bold text-center mb-2">Register</h1>
+
+        <p className="text-center text-gray-500 mb-6">
+          3MTT QR Attendance System
+        </p>
+
+        {/* Error message */}
+        {error && (
+          <div className="bg-red-100 border border-red-300 text-red-700 p-3 rounded-lg mb-5 text-sm">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Full Name */}
-          <input
-            type="text"
-            name="fullName"
-            placeholder="Full Name"
-            value={formData.fullName}
-            onChange={handleChange}
-            className="w-full border p-3 rounded"
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium mb-1">Full Name</label>
+
+            <input
+              type="text"
+              name="fullName"
+              placeholder="Enter your full name"
+              value={formData.fullName}
+              onChange={handleChange}
+              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
 
           {/* Matric Number */}
-          <input
-            type="text"
-            name="matricNumber"
-            placeholder="3MTT Matric No"
-            value={formData.matricNumber}
-            onChange={handleChange}
-            className="w-full border p-3 rounded"
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              3MTT Matric Number
+            </label>
+
+            <input
+              type="text"
+              name="matricNumber"
+              placeholder="Enter your matric number"
+              value={formData.matricNumber}
+              onChange={handleChange}
+              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
 
           {/* Email */}
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full border p-3 rounded"
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium mb-1">Email</label>
+
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
 
           {/* Password */}
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full border p-3 rounded"
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium mb-1">Password</label>
+
+            <input
+              type="password"
+              name="password"
+              placeholder="Create a password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
 
           {/* Confirm Password */}
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            className="w-full border p-3 rounded"
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Confirm Password
+            </label>
+
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
 
           {/* Terms */}
           <div className="flex items-start gap-2">
@@ -159,29 +205,30 @@ export default function Register() {
               className="mt-1"
             />
 
-            <label htmlFor="agree" className="text-sm">
+            <label htmlFor="agree" className="text-sm text-gray-700">
               I agree to the{" "}
               <span className="text-blue-600">Terms & Conditions</span>
             </label>
           </div>
 
-          {/* Register button */}
+          {/* Register */}
           <button
             type="submit"
             disabled={!agree || loading}
-            className={`w-full py-3 rounded text-white transition ${
+            className={`w-full py-3 rounded-lg text-white font-semibold ${
               agree && !loading
-                ? "bg-green-600 hover:bg-green-800"
+                ? "bg-green-600 hover:bg-green-700"
                 : "bg-gray-400 cursor-not-allowed"
             }`}
           >
-            {loading ? "Registering..." : "Register"}
+            {loading ? "Creating account..." : "Create Account"}
           </button>
         </form>
 
-        <p className="text-sm text-center mt-4">
+        {/* Login */}
+        <p className="text-sm text-center mt-5 text-gray-600">
           Already have an account?{" "}
-          <Link to="/" className="text-blue-600 hover:underline">
+          <Link to="/" className="text-blue-600 font-medium hover:underline">
             Login
           </Link>
         </p>
