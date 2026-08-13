@@ -71,12 +71,12 @@ export default function Register() {
         alert(
           `Registration successful! Registered as ${
             formData.role === "teacher" ? "Teacher/Instructor" : "Student"
-          }.`
+          }.`,
         );
         navigate("/dashboard");
       } else {
         alert(
-          "Registration successful! Please check your email inbox to confirm your account before logging in."
+          "Registration successful! Please check your email inbox to confirm your account before logging in.",
         );
         setFormData({
           fullName: "",
@@ -103,14 +103,15 @@ export default function Register() {
       <div className="hidden lg:flex lg:w-2/5 bg-slate-900 flex-col items-center justify-center px-12 relative overflow-hidden">
         <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-72 h-72 bg-violet-600/20 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 text-center">
-          <div className="w-16 h-16 bg-violet-600 rounded-2xl flex items-center justify-center text-white text-2xl font-extrabold shadow-xl mx-auto mb-5">
-            3M
+          <div className="w-16 h-16 bg-violet-600 rounded-2xl flex items-center justify-center text-white text-xl font-extrabold shadow-xl mx-auto mb-5">
+            3MTT
           </div>
           <h1 className="text-3xl font-extrabold text-white leading-tight">
             Join 3MTT
           </h1>
           <p className="text-slate-400 mt-3 max-w-xs text-sm">
-            Create your account and start tracking attendance with our QR system.
+            Create your account and start tracking attendance with our QR
+            system.
           </p>
           <div className="mt-8 space-y-3 text-left">
             {[
@@ -329,7 +330,10 @@ export default function Register() {
 
           <p className="text-sm text-center mt-6 text-slate-500">
             Already have an account?{" "}
-            <Link to="/" className="text-indigo-600 font-semibold hover:underline">
+            <Link
+              to="/"
+              className="text-indigo-600 font-semibold hover:underline"
+            >
               Sign In
             </Link>
           </p>

@@ -35,10 +35,12 @@ export default function Login() {
 
       if (loginError) {
         if (
-          loginError.message?.toLowerCase().includes("invalid login credentials")
+          loginError.message
+            ?.toLowerCase()
+            .includes("invalid login credentials")
         ) {
           throw new Error(
-            "Invalid email or password. If you recently registered, please check your email inbox to confirm your account first, or turn off 'Confirm Email' in Supabase Auth Settings."
+            "Invalid email or password. If you recently registered, please check your email inbox to confirm your account first, or turn off 'Confirm Email' in Supabase Auth Settings.",
           );
         }
         throw loginError;
@@ -65,14 +67,14 @@ export default function Login() {
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 text-center">
-          <div className="w-20 h-20 bg-indigo-600 rounded-2xl flex items-center justify-center text-white text-3xl font-extrabold shadow-xl mx-auto mb-6">
-            3M
+          <div className="w-20 h-20 bg-indigo-600 rounded-2xl flex items-center justify-center text-white text-2xl font-extrabold shadow-xl mx-auto mb-6">
+            3MTT
           </div>
           <h1 className="text-4xl font-extrabold text-white leading-tight">
             3MTT Attendance
           </h1>
           <p className="text-slate-400 text-lg mt-3 max-w-xs">
-            Smart QR-based attendance management for modern classrooms.
+            Smart QR-based attendance management for classroom.
           </p>
 
           <div className="mt-10 grid grid-cols-3 gap-4 text-center">
@@ -195,7 +197,7 @@ export default function Login() {
               to="/Register"
               className="text-indigo-600 font-semibold hover:underline"
             >
-              Create one free
+              Create Account
             </Link>
           </p>
         </div>
