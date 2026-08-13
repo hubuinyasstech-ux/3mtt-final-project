@@ -11,40 +11,66 @@ export default function Navbar() {
   };
 
   const displayName = profile?.full_name || user?.email;
+  const initials = displayName
+    ? displayName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+    : "U";
 
   return (
-    <header className="bg-white border-b px-6 py-3 flex items-center justify-between shadow-sm">
+    <header className="bg-slate-900 border-b border-slate-700/60 px-6 py-3 flex items-center justify-between shadow-md">
+      {/* Brand */}
       <div className="flex items-center gap-3">
-        <div className="text-xl font-extrabold text-blue-700">3MTT</div>
-        <div className="h-4 w-px bg-gray-300"></div>
-        <div className="text-sm font-medium text-gray-600">QR Attendance System</div>
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white text-sm font-extrabold shadow">
+            3M
+          </div>
+          <div>
+            <div className="text-white font-extrabold text-sm tracking-tight leading-none">
+              3MTT
+            </div>
+            <div className="text-slate-400 text-xs font-medium leading-none mt-0.5">
+              QR Attendance
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      {/* Right */}
+      <div className="flex items-center gap-3">
         {user ? (
           <>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-gray-700">{displayName}</span>
+            {/* User info */}
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+                {initials}
+              </div>
+              <div className="hidden sm:block">
+                <div className="text-slate-200 text-xs font-semibold leading-none">
+                  {displayName}
+                </div>
+                <div className="text-slate-400 text-xs mt-0.5 capitalize">
+                  {role || "user"}
+                </div>
+              </div>
               <span
-                className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${
+                className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide ${
                   role === "teacher"
-                    ? "bg-purple-100 text-purple-700 border border-purple-200"
-                    : "bg-blue-100 text-blue-700 border border-blue-200"
+                    ? "bg-violet-500/20 text-violet-300 border border-violet-500/30"
+                    : "bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"
                 }`}
               >
-                {role === "teacher" ? "Teacher" : "Student"}
+                {role === "teacher" ? "Instructor" : "Student"}
               </span>
             </div>
 
             <button
               onClick={handleLogout}
-              className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-sm font-medium transition"
+              className="px-3 py-1.5 bg-slate-700 hover:bg-red-600/80 text-slate-300 hover:text-white rounded-lg text-xs font-semibold transition-all duration-200 border border-slate-600 hover:border-red-500/50"
             >
-              Logout
+              Sign Out
             </button>
           </>
         ) : (
-          <div className="text-sm text-gray-600">Not signed in</div>
+          <div className="text-slate-400 text-sm">Not signed in</div>
         )}
       </div>
     </header>

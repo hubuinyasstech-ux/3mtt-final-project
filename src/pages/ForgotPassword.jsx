@@ -36,61 +36,76 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-blue-100 px-4">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-2">Forgot Password</h1>
-
-        <p className="text-gray-500 text-center mb-6 text-sm">
-          Enter your registered email address and we will send you a password reset link.
-        </p>
-
-        {error && (
-          <div className="bg-red-100 border border-red-300 text-red-700 p-3 rounded-lg mb-5 text-sm">
-            {error}
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
+      <div className="w-full max-w-md">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white text-xl font-extrabold shadow-lg mx-auto mb-4">
+            🔑
           </div>
-        )}
+          <h1 className="text-3xl font-extrabold text-slate-900">
+            Forgot Password?
+          </h1>
+          <p className="text-slate-500 mt-2 text-sm">
+            Enter your registered email address and we'll send you a reset link.
+          </p>
+        </div>
 
-        {message && (
-          <div className="bg-green-100 border border-green-300 text-green-700 p-3 rounded-lg mb-5 text-sm">
-            {message}
-          </div>
-        )}
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
+          {/* Error */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl mb-5 text-sm flex gap-2.5">
+              <span>⚠️</span>
+              <span>{error}</span>
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address
-            </label>
+          {/* Success */}
+          {message && (
+            <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-4 rounded-xl mb-5 text-sm flex gap-2.5">
+              <span>✅</span>
+              <span>{message}</span>
+            </div>
+          )}
 
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                Email Address
+              </label>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-slate-200 bg-slate-50 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-900 placeholder-slate-400 shadow-sm transition"
+                required
+              />
+            </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3 rounded-lg text-white font-semibold transition ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
-            }`}
-          >
-            {loading ? "Sending..." : "Send Reset Link"}
-          </button>
-        </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-3 rounded-xl text-white font-bold transition-all duration-200 shadow-md ${
+                loading
+                  ? "bg-slate-400 cursor-not-allowed"
+                  : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-200"
+              }`}
+            >
+              {loading ? "Sending..." : "Send Reset Link →"}
+            </button>
+          </form>
 
-        <p className="mt-5 text-center text-sm text-gray-600">
-          Remembered your password?{" "}
-          <Link to="/" className="text-blue-600 font-medium hover:underline">
-            Back to Login
-          </Link>
-        </p>
+          <p className="mt-6 text-center text-sm text-slate-500">
+            Remembered your password?{" "}
+            <Link
+              to="/"
+              className="text-indigo-600 font-semibold hover:underline"
+            >
+              Back to Login
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
