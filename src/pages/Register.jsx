@@ -120,7 +120,7 @@ export default function Register() {
               "Real-time attendance analytics",
             ].map((f) => (
               <div key={f} className="flex items-center gap-3">
-                <div className="w-5 h-5 rounded-full bg-violet-500/30 border border-violet-500/50 flex items-center justify-center text-violet-300 text-xs font-bold flex-shrink-0">
+                <div className="w-5 h-5 rounded-full bg-violet-500/30 border border-violet-500/50 flex items-center justify-center text-violet-300 text-xs font-bold shrink-0">
                   ✓
                 </div>
                 <span className="text-slate-400 text-sm">{f}</span>
