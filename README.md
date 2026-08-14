@@ -250,8 +250,6 @@ Statistics and charts
 Role-based access control
 Email notifications
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/f760bad9-3a12-4e79-bcca-20586775d847/deploy-status)](https://app.netlify.com/projects/3mtt-attendance/deploys)
-
 ## Author
 ### HUBU-INYASS TECH ADISA KABIRU O
 QR Attendance System --- Final Project
