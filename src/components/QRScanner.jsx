@@ -18,7 +18,7 @@ export default function QRScanner({ onScan }) {
           const cameraId = devices[0].id;
           html5QrCode.start(
             cameraId,
-            { fps: 10, qrbox: 250 },
+            { fps: 10, qrbox: { width: 250, height: 250 } },
             (decoded) => onScan?.(decoded),
             (error) => {
               // ignore per-frame errors
@@ -33,5 +33,5 @@ export default function QRScanner({ onScan }) {
     };
   }, [onScan]);
 
-  return <div id="qr-reader" ref={divRef} className="w-full" />;
+  return <div id="qr-reader" ref={divRef} className="w-full h-64 md:h-96" />;
 }
