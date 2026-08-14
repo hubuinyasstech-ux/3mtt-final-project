@@ -1,11 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
+:root {
+  --3mtt-green: #008751;
+  --3mtt-green-light: #26a65b;
+  --3mtt-mint: #56c760;
+  --3mtt-mint-bg: #e6f1e6;
+  --3mtt-dark: #20203c;
+  --3mtt-dark-light: #292d4a;
+  --3mtt-gold: #f0a901;
+  --3mtt-text: #062324;
+}
+
 * {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 body {
-  background-color: #f0f4f8;
-  color: #1a202c;
+  background-color: #f4f7f4;
+  color: #062324;
 }

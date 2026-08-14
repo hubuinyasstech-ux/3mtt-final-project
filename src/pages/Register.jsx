@@ -70,13 +70,13 @@ export default function Register() {
       if (data.session) {
         alert(
           `Registration successful! Registered as ${
-            formData.role === "teacher" ? "Teacher/Instructor" : "Student"
-          }.`,
+            formData.role === "teacher" ? "Teacher/Instructor" : "Fellow/Student"
+          }.`
         );
         navigate("/dashboard");
       } else {
         alert(
-          "Registration successful! Please check your email inbox to confirm your account before logging in.",
+          "Registration successful! Please check your email inbox to confirm your account before logging in."
         );
         setFormData({
           fullName: "",
@@ -98,62 +98,61 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left brand panel */}
-      <div className="hidden lg:flex lg:w-2/5 bg-slate-900 flex-col items-center justify-center px-12 relative overflow-hidden">
-        <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-72 h-72 bg-violet-600/20 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen flex bg-slate-50">
+      {/* Left 3MTT Brand Panel */}
+      <div className="hidden lg:flex lg:w-2/5 bg-[#20203C] flex-col items-center justify-center px-12 relative overflow-hidden">
+        <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-72 h-72 bg-[#008751]/20 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 text-center">
-          <div className="w-16 h-16 bg-violet-600 rounded-2xl flex items-center justify-center text-white text-xl font-extrabold shadow-xl mx-auto mb-5">
-            3MTT
+          <div className="w-16 h-16 bg-[#008751] rounded-2xl flex items-center justify-center text-white text-2xl font-extrabold shadow-xl mx-auto mb-5 border border-emerald-400/20">
+            3M
           </div>
           <h1 className="text-3xl font-extrabold text-white leading-tight">
             Join 3MTT
           </h1>
-          <p className="text-slate-400 mt-3 max-w-xs text-sm">
-            Create your account and start tracking attendance with our QR
-            system.
+          <p className="text-slate-300 mt-3 max-w-xs text-sm">
+            Create your fellow or instructor account and start tracking attendance.
           </p>
           <div className="mt-8 space-y-3 text-left">
             {[
-              "QR-powered attendance scanning",
-              "Role-based student & teacher portals",
-              "Real-time attendance analytics",
+              "QR-powered attendance verification",
+              "Role-based Fellow & Instructor portals",
+              "Real-time cohort & course analytics",
             ].map((f) => (
               <div key={f} className="flex items-center gap-3">
-                <div className="w-5 h-5 rounded-full bg-violet-500/30 border border-violet-500/50 flex items-center justify-center text-violet-300 text-xs font-bold shrink-0">
+                <div className="w-5 h-5 rounded-full bg-[#008751]/30 border border-[#008751]/60 flex items-center justify-center text-[#56C760] text-xs font-bold flex-shrink-0">
                   ✓
                 </div>
-                <span className="text-slate-400 text-sm">{f}</span>
+                <span className="text-slate-300 text-xs sm:text-sm font-medium">{f}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Right form panel */}
-      <div className="flex-1 flex items-center justify-center bg-slate-50 px-6 py-12 overflow-y-auto">
+      {/* Right Form Panel */}
+      <div className="flex-1 flex items-center justify-center px-6 py-12 overflow-y-auto">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-violet-600 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow">
-              3mtt
+            <div className="w-10 h-10 bg-[#008751] rounded-xl flex items-center justify-center text-white font-extrabold text-sm shadow">
+              3M
             </div>
             <div>
-              <div className="font-extrabold text-slate-900 text-sm">3MTT</div>
+              <div className="font-extrabold text-slate-900 text-sm">3MTT Nigeria</div>
               <div className="text-slate-500 text-xs">QR Attendance System</div>
             </div>
           </div>
 
           <h2 className="text-3xl font-extrabold text-slate-900">
-            Create your account
+            Create account
           </h2>
-          <p className="text-slate-500 mt-1 mb-6 text-sm">
-            Fill in the details below to get started.
+          <p className="text-slate-500 mt-1 mb-6 text-xs sm:text-sm">
+            Fill in your details to register on the 3MTT platform.
           </p>
 
           {/* Error */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl mb-6 text-sm flex gap-2.5">
+            <div className="bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-2xl mb-6 text-xs sm:text-sm flex gap-2.5">
               <span className="mt-0.5">⚠️</span>
               <span>{error}</span>
             </div>
@@ -162,8 +161,8 @@ export default function Register() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Role Selector */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
-                Account Type
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                Account Role
               </label>
               <div className="grid grid-cols-2 gap-3">
                 <button
@@ -171,23 +170,23 @@ export default function Register() {
                   onClick={() =>
                     setFormData((prev) => ({ ...prev, role: "student" }))
                   }
-                  className={`py-3 px-4 rounded-xl font-semibold text-sm border-2 transition-all duration-150 ${
+                  className={`py-3 px-4 rounded-2xl font-bold text-xs sm:text-sm border-2 transition-all duration-150 ${
                     formData.role === "student"
-                      ? "bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-100"
-                      : "bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50"
+                      ? "bg-[#008751] text-white border-[#008751] shadow-md shadow-emerald-950/20"
+                      : "bg-white text-slate-600 border-slate-200 hover:border-[#008751]/50 hover:bg-emerald-50/50"
                   }`}
                 >
-                  🎓 Student
+                  🎓 3MTT Fellow
                 </button>
                 <button
                   type="button"
                   onClick={() =>
                     setFormData((prev) => ({ ...prev, role: "teacher" }))
                   }
-                  className={`py-3 px-4 rounded-xl font-semibold text-sm border-2 transition-all duration-150 ${
+                  className={`py-3 px-4 rounded-2xl font-bold text-xs sm:text-sm border-2 transition-all duration-150 ${
                     formData.role === "teacher"
-                      ? "bg-violet-600 text-white border-violet-600 shadow-md shadow-violet-100"
-                      : "bg-white text-slate-600 border-slate-200 hover:border-violet-300 hover:bg-violet-50"
+                      ? "bg-[#20203C] text-white border-[#20203C] shadow-md shadow-slate-900/20"
+                      : "bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:bg-slate-50"
                   }`}
                 >
                   👨‍🏫 Instructor
@@ -197,7 +196,7 @@ export default function Register() {
 
             {/* Full Name */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Full Name
               </label>
               <input
@@ -206,24 +205,24 @@ export default function Register() {
                 placeholder="Enter your full name"
                 value={formData.fullName}
                 onChange={handleChange}
-                className="w-full border border-slate-200 bg-white p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm text-slate-900 placeholder-slate-400 transition"
+                className="w-full border border-slate-200 bg-white p-3.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#008751] focus:border-transparent text-slate-900 text-xs sm:text-sm placeholder-slate-400 shadow-sm transition"
                 required
               />
             </div>
 
-            {/* Matric Number (Students only) */}
+            {/* Matric / ID Number */}
             {formData.role === "student" && (
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                  3MTT Matric Number
+                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  3MTT Fellow ID / Matric Number
                 </label>
                 <input
                   type="text"
                   name="matricNumber"
-                  placeholder="Enter your matric number"
+                  placeholder="e.g. 3MTT-FELLOW-1024"
                   value={formData.matricNumber}
                   onChange={handleChange}
-                  className="w-full border border-slate-200 bg-white p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm text-slate-900 placeholder-slate-400 transition"
+                  className="w-full border border-slate-200 bg-white p-3.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#008751] focus:border-transparent text-slate-900 text-xs sm:text-sm placeholder-slate-400 shadow-sm transition"
                   required
                 />
               </div>
@@ -231,7 +230,7 @@ export default function Register() {
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Email Address
               </label>
               <input
@@ -240,14 +239,14 @@ export default function Register() {
                 placeholder="you@example.com"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full border border-slate-200 bg-white p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm text-slate-900 placeholder-slate-400 transition"
+                className="w-full border border-slate-200 bg-white p-3.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#008751] focus:border-transparent text-slate-900 text-xs sm:text-sm placeholder-slate-400 shadow-sm transition"
                 required
               />
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -257,13 +256,13 @@ export default function Register() {
                   placeholder="Create a password (min. 6 chars)"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full border border-slate-200 bg-white p-3 pr-14 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm text-slate-900 placeholder-slate-400 transition"
+                  className="w-full border border-slate-200 bg-white p-3.5 pr-14 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#008751] focus:border-transparent text-slate-900 text-xs sm:text-sm placeholder-slate-400 shadow-sm transition"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs font-bold hover:text-indigo-600 focus:outline-none px-2 py-1 bg-slate-100 hover:bg-indigo-50 rounded-lg transition"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs font-bold hover:text-[#008751] focus:outline-none px-2 py-1 bg-slate-100 rounded-lg transition"
                 >
                   {showPassword ? "HIDE" : "SHOW"}
                 </button>
@@ -272,7 +271,7 @@ export default function Register() {
 
             {/* Confirm Password */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Confirm Password
               </label>
               <div className="relative">
@@ -282,13 +281,13 @@ export default function Register() {
                   placeholder="Repeat your password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full border border-slate-200 bg-white p-3 pr-14 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm text-slate-900 placeholder-slate-400 transition"
+                  className="w-full border border-slate-200 bg-white p-3.5 pr-14 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#008751] focus:border-transparent text-slate-900 text-xs sm:text-sm placeholder-slate-400 shadow-sm transition"
                   required
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs font-bold hover:text-indigo-600 focus:outline-none px-2 py-1 bg-slate-100 hover:bg-indigo-50 rounded-lg transition"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs font-bold hover:text-[#008751] focus:outline-none px-2 py-1 bg-slate-100 rounded-lg transition"
                 >
                   {showPassword ? "HIDE" : "SHOW"}
                 </button>
@@ -296,18 +295,18 @@ export default function Register() {
             </div>
 
             {/* Terms */}
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-3 pt-1">
               <input
                 type="checkbox"
                 id="agree"
                 checked={agree}
                 onChange={(e) => setAgree(e.target.checked)}
-                className="mt-0.5 w-4 h-4 accent-indigo-600"
+                className="mt-0.5 w-4 h-4 accent-[#008751]"
               />
-              <label htmlFor="agree" className="text-sm text-slate-600">
+              <label htmlFor="agree" className="text-xs text-slate-600">
                 I agree to the{" "}
-                <span className="text-indigo-600 font-semibold cursor-pointer hover:underline">
-                  Terms & Conditions
+                <span className="text-[#008751] font-bold hover:underline cursor-pointer">
+                  3MTT Terms & Conditions
                 </span>
               </label>
             </div>
@@ -316,11 +315,9 @@ export default function Register() {
             <button
               type="submit"
               disabled={!agree || loading}
-              className={`w-full py-3 rounded-xl text-white font-bold transition-all duration-200 shadow-md ${
+              className={`w-full py-3.5 rounded-2xl text-white font-bold text-xs sm:text-sm transition-all duration-200 shadow-md ${
                 agree && !loading
-                  ? formData.role === "teacher"
-                    ? "bg-violet-600 hover:bg-violet-700 hover:shadow-violet-200 hover:shadow-lg"
-                    : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-indigo-200 hover:shadow-lg"
+                  ? "bg-[#008751] hover:bg-[#26a65b] shadow-emerald-950/20"
                   : "bg-slate-300 cursor-not-allowed"
               }`}
             >
@@ -328,12 +325,9 @@ export default function Register() {
             </button>
           </form>
 
-          <p className="text-sm text-center mt-6 text-slate-500">
+          <p className="text-xs sm:text-sm text-center mt-6 text-slate-500">
             Already have an account?{" "}
-            <Link
-              to="/"
-              className="text-indigo-600 font-semibold hover:underline"
-            >
+            <Link to="/" className="text-[#008751] font-bold hover:underline">
               Sign In
             </Link>
           </p>

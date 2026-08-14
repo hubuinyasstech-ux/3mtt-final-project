@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "../service/supabase";
 
 export default function GenerateQR() {
-  const [title, setTitle] = useState("3MTT Class Session");
+  const [title, setTitle] = useState("3MTT Cohort Session");
   const [sessionId, setSessionId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -50,15 +50,20 @@ export default function GenerateQR() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="bg-slate-900 border-b border-slate-700/50 text-white px-6 py-4">
+      <header className="bg-[#20203C] border-b border-slate-700/50 text-white px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-white">3MTT QR Attendance</h1>
-            <p className="text-slate-400 text-xs mt-0.5">Instructor QR Generator</p>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-[#008751] rounded-xl flex items-center justify-center font-extrabold text-sm shadow-md border border-emerald-400/20">
+              3M
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-white leading-none">3MTT QR Generator</h1>
+              <p className="text-slate-300 text-xs mt-0.5">Instructor Session Management</p>
+            </div>
           </div>
           <Link
             to="/dashboard"
-            className="bg-slate-700 hover:bg-slate-600 text-slate-200 px-4 py-2 rounded-lg font-medium text-sm transition border border-slate-600"
+            className="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3.5 py-1.5 rounded-xl font-medium text-xs transition"
           >
             ← Dashboard
           </Link>
@@ -66,31 +71,31 @@ export default function GenerateQR() {
       </header>
 
       {/* Main */}
-      <main className="max-w-2xl mx-auto p-6">
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 text-center">
-          <span className="bg-violet-100 text-violet-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-violet-200">
-            Teacher Session Tools
+      <main className="max-w-2xl mx-auto p-4 sm:p-6">
+        <div className="bg-white rounded-3xl shadow-xl border border-slate-200/80 p-6 sm:p-8 text-center">
+          <span className="bg-[#F0A901]/20 text-[#F0A901] px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-[#F0A901]/30">
+            Instructor Tools
           </span>
 
-          <h2 className="text-2xl font-bold text-gray-800 mt-2">
+          <h2 className="text-2xl font-extrabold text-[#062324] mt-3">
             Generate Session QR Code
           </h2>
 
-          <p className="text-slate-500 mt-1 mb-6 text-sm">
-            Create an official attendance session. Display this QR code on screen or print it for students to scan.
+          <p className="text-slate-500 mt-1 mb-6 text-xs sm:text-sm">
+            Create an official 3MTT attendance session. Display this QR code on screen or print it for fellows to scan.
           </p>
 
           <form onSubmit={generateSession} className="space-y-4 text-left">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Course / Session Title
               </label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. Frontend Web Development - Week 4"
-              className="w-full border border-slate-200 bg-slate-50 p-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-900 placeholder-slate-400 shadow-sm transition"
+                placeholder="e.g. Frontend Development - Week 4"
+                className="w-full border border-slate-200 bg-white p-3.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#008751] focus:border-transparent text-slate-900 text-xs sm:text-sm placeholder-slate-400 shadow-sm transition"
                 required
               />
             </div>
@@ -99,22 +104,22 @@ export default function GenerateQR() {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 rounded-xl text-white font-bold transition-all duration-200 shadow-md ${
+              className={`w-full py-3.5 rounded-2xl text-white font-bold text-xs sm:text-sm transition-all duration-200 shadow-md ${
                 loading
                   ? "bg-slate-400 cursor-not-allowed"
-                  : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-200"
+                  : "bg-[#008751] hover:bg-[#26a65b] shadow-emerald-950/20"
               }`}
             >
-              {loading ? "Creating Session..." : "⚡ Generate QR Code"}
+              {loading ? "Creating Session..." : "⚡ Generate Session QR Code"}
             </button>
           </form>
 
           {/* Error */}
           {error && (
-            <div className="mt-5 bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl text-left flex gap-2.5 text-sm">
-              <span>⚠️</span>
+            <div className="mt-5 bg-rose-50 border border-rose-200 text-rose-800 p-4 rounded-2xl text-left flex gap-2.5 text-xs sm:text-sm">
+              <span className="mt-0.5">⚠️</span>
               <div>
-                <p className="font-semibold">Error creating attendance session</p>
+                <p className="font-bold">Error creating session</p>
                 <p className="mt-0.5">{error}</p>
               </div>
             </div>
@@ -123,35 +128,35 @@ export default function GenerateQR() {
           {/* Generated QR Code Display */}
           {sessionId && (
             <div className="mt-8 border-t border-slate-100 pt-6">
-              <div className="inline-block bg-white p-6 border-2 border-indigo-100 rounded-2xl shadow-sm">
-                <QRCode value={qrPayload} size={240} />
+              <div className="inline-block bg-white p-6 border-2 border-[#c9edcc] rounded-3xl shadow-sm">
+                <QRCode value={qrPayload} size={220} />
               </div>
 
-              <h3 className="font-bold text-gray-800 mt-5 text-lg">
+              <h3 className="font-extrabold text-[#062324] mt-5 text-base sm:text-lg">
                 Active Session: {title}
               </h3>
 
-              <div className="inline-flex items-center gap-2 bg-indigo-50 text-indigo-900 border border-indigo-200 px-4 py-2 rounded-xl mt-3 font-mono font-bold text-sm">
-                <span className="text-slate-500">Code:</span>
-                <span className="text-indigo-700">{sessionId}</span>
+              <div className="inline-flex items-center gap-2 bg-[#e6f1e6] text-[#008751] border border-[#c9edcc] px-4 py-2 rounded-xl mt-3 font-mono font-bold text-xs sm:text-sm">
+                <span className="text-slate-500">Session Code:</span>
+                <span className="text-[#008751]">{sessionId}</span>
               </div>
 
-              <p className="text-sm text-emerald-600 font-semibold mt-4 flex items-center justify-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                Live Session Ready for Student Scans
+              <p className="text-xs sm:text-sm text-[#008751] font-bold mt-4 flex items-center justify-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#008751] animate-pulse"></span>
+                Live Session Ready for Scanning
               </p>
 
               <p className="text-xs text-slate-500 mt-1">
-                Students scan this QR code using their phone camera on the Scan QR page to mark attendance.
+                3MTT fellows scan this QR code using their camera on the Scan QR page to mark attendance.
               </p>
             </div>
           )}
 
           <Link
             to="/attendance"
-            className="block mt-6 text-indigo-600 font-semibold hover:underline text-sm"
+            className="block mt-6 text-[#008751] font-bold hover:underline text-xs sm:text-sm"
           >
-            ← View Attendance Log Records
+            ← View Global Attendance Records
           </Link>
         </div>
       </main>

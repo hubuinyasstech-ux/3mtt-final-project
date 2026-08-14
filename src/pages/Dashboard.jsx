@@ -26,7 +26,7 @@ function StudentDashboard() {
     profile?.full_name ||
     user?.user_metadata?.full_name ||
     user?.email?.split("@")[0] ||
-    "Student";
+    "Fellow";
 
   useEffect(() => {
     if (user?.id) {
@@ -47,78 +47,80 @@ function StudentDashboard() {
   return (
     <div className="space-y-6">
       {/* Welcome banner */}
-      <div className="bg-slate-900 text-white p-6 rounded-2xl shadow-md flex items-center justify-between border border-slate-800">
-        <div>
-          <span className="bg-indigo-500/20 border border-indigo-500/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-indigo-300">
-            🎓 Student Portal
+      <div className="bg-[#20203C] text-white p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800 relative overflow-hidden">
+        <div className="absolute right-0 top-0 w-64 h-64 bg-[#008751]/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10">
+          <span className="bg-[#008751]/20 border border-[#008751]/40 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-[#56C760]">
+            🎓 3MTT Fellow Portal
           </span>
-          <h2 className="text-3xl font-extrabold mt-2">Welcome, {studentName} 👋</h2>
-          <p className="text-slate-400 mt-1 text-sm max-w-xl">
-            Track your 3MTT course attendance, scan session QR codes, and
-            maintain your academic progress records.
+          <h2 className="text-2xl sm:text-3xl font-extrabold mt-3 text-white">Welcome back, {studentName} 👋</h2>
+          <p className="text-slate-300 mt-1.5 text-xs sm:text-sm max-w-xl leading-relaxed">
+            Track your 3MTT training cohort attendance, scan live session QR codes, and maintain your academic progress records.
           </p>
         </div>
         <Link
           to="/ScanQR"
-          className="hidden sm:inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3 rounded-xl font-bold transition shadow-lg shadow-indigo-900/40"
+          className="relative z-10 self-stretch sm:self-auto inline-flex items-center justify-center gap-2 bg-[#008751] hover:bg-[#26a65b] text-white px-5 py-3 rounded-2xl font-bold text-xs sm:text-sm transition shadow-lg shadow-emerald-950/40"
         >
-          📷 Scan QR Now
+          📷 Scan QR Code
         </Link>
       </div>
 
       {/* Statistics Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5">
           <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Sessions</p>
-          <h3 className="text-3xl font-extrabold text-slate-900 mt-2">{totalClasses > 0 ? totalClasses : 20}</h3>
-          <div className="w-8 h-1 bg-indigo-500 rounded mt-2" />
+          <h3 className="text-3xl font-extrabold text-[#062324] mt-2">{totalClasses > 0 ? totalClasses : 20}</h3>
+          <div className="w-8 h-1 bg-[#008751] rounded mt-2" />
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5">
           <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Present</p>
-          <h3 className="text-3xl font-extrabold text-emerald-600 mt-2">{totalClasses > 0 ? presentCount : 18}</h3>
-          <div className="w-8 h-1 bg-emerald-400 rounded mt-2" />
+          <h3 className="text-3xl font-extrabold text-[#26a65b] mt-2">{totalClasses > 0 ? presentCount : 18}</h3>
+          <div className="w-8 h-1 bg-[#56c760] rounded mt-2" />
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5">
           <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Absent</p>
-          <h3 className="text-3xl font-extrabold text-rose-500 mt-2">{totalClasses > 0 ? absentCount : 2}</h3>
+          <h3 className="text-3xl font-extrabold text-rose-600 mt-2">{totalClasses > 0 ? absentCount : 2}</h3>
           <div className="w-8 h-1 bg-rose-400 rounded mt-2" />
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5">
           <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Attendance Rate</p>
-          <h3 className="text-3xl font-extrabold text-indigo-600 mt-2">{totalClasses > 0 ? attendanceRate : 90}%</h3>
-          <div className="w-8 h-1 bg-indigo-200 rounded mt-2"><div className="h-1 bg-indigo-500 rounded" style={{width:`${totalClasses > 0 ? attendanceRate : 90}%`}} /></div>
+          <h3 className="text-3xl font-extrabold text-[#008751] mt-2">{totalClasses > 0 ? attendanceRate : 90}%</h3>
+          <div className="w-full bg-slate-100 rounded-full h-1.5 mt-3">
+            <div className="bg-[#008751] h-1.5 rounded-full" style={{ width: `${totalClasses > 0 ? attendanceRate : 90}%` }} />
+          </div>
         </div>
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-        <h3 className="text-base font-bold text-slate-900 mb-4">Quick Student Actions</h3>
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6">
+        <h3 className="text-sm font-extrabold text-[#062324] uppercase tracking-wider mb-4">Quick Fellow Actions</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Link
             to="/ScanQR"
-            className="bg-emerald-600 hover:bg-emerald-700 text-white p-4 rounded-xl text-center font-bold transition shadow-sm shadow-emerald-100 flex items-center justify-center gap-2"
+            className="bg-[#008751] hover:bg-[#26a65b] text-white p-4 rounded-2xl text-center font-bold text-xs sm:text-sm transition shadow-md shadow-emerald-950/10 flex items-center justify-center gap-2"
           >
-            📷 Scan Attendance QR Code
+            📷 Scan Session QR Code
           </Link>
           <Link
             to="/attendance"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white p-4 rounded-xl text-center font-bold transition shadow-sm shadow-indigo-100 flex items-center justify-center gap-2"
+            className="bg-[#20203C] hover:bg-[#292D4A] text-white p-4 rounded-2xl text-center font-bold text-xs sm:text-sm transition shadow-md flex items-center justify-center gap-2"
           >
-            📋 View My Attendance Records
+            📋 View Attendance History
           </Link>
         </div>
       </div>
 
       {/* Recent Attendance */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-          <h3 className="text-base font-bold text-slate-900">My Recent Attendance Records</h3>
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div className="p-5 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+          <h3 className="text-sm font-extrabold text-[#062324] uppercase tracking-wider">Recent Attendance Log</h3>
           <Link
             to="/attendance"
-            className="text-sm font-semibold text-indigo-600 hover:underline"
+            className="text-xs font-bold text-[#008751] hover:underline"
           >
             View All →
           </Link>
@@ -133,38 +135,34 @@ function StudentDashboard() {
                 <th className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-slate-500">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-slate-100">
               {loading ? (
                 <tr>
-                  <td
-                    colSpan="3"
-                    className="px-6 py-4 text-center text-gray-500"
-                  >
-                    Loading attendance records...
+                  <td colSpan="3" className="px-6 py-8 text-center text-slate-400">
+                    <div className="flex items-center justify-center gap-2 text-xs">
+                      <div className="w-4 h-4 border-2 border-[#008751] border-t-transparent rounded-full animate-spin" />
+                      Loading records...
+                    </div>
                   </td>
                 </tr>
               ) : records.length > 0 ? (
                 records.slice(0, 5).map((rec, i) => (
-                  <tr
-                    key={rec.id || i}
-                    className="hover:bg-gray-50/50 transition"
-                  >
-                    <td className="px-6 py-4 text-sm text-gray-700 font-medium">
-                      {rec.created_at
-                        ? new Date(rec.created_at).toLocaleDateString()
-                        : "Today"}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-800 font-mono">
-                      {rec.session_code || rec.className || "3MTT Track"}
+                  <tr key={rec.id || i} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="px-6 py-4 text-xs text-slate-700 font-semibold">
+                      {rec.created_at ? new Date(rec.created_at).toLocaleDateString() : "Today"}
                     </td>
                     <td className="px-6 py-4">
-                      <span
-                        className={`px-3 py-1 rounded-full text-xs font-bold ${
-                          rec.status === "Present"
-                            ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
-                            : "bg-rose-100 text-rose-700 border border-rose-200"
-                        }`}
-                      >
+                      <span className="font-mono text-xs bg-[#e6f1e6] text-[#008751] border border-[#c9edcc] px-2.5 py-1 rounded-lg font-bold">
+                        {rec.session_code || rec.className || "3MTT Track"}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border ${
+                        rec.status === "Present"
+                          ? "bg-[#e6f1e6] text-[#008751] border-[#c9edcc]"
+                          : "bg-rose-50 text-rose-700 border-rose-200"
+                      }`}>
+                        <span className={`w-1.5 h-1.5 rounded-full ${rec.status === "Present" ? "bg-[#008751]" : "bg-rose-500"}`} />
                         {rec.status || "Present"}
                       </span>
                     </td>
@@ -173,14 +171,14 @@ function StudentDashboard() {
               ) : (
                 <>
                   <tr className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4 text-sm text-slate-700 font-medium">10 Aug 2026</td>
-                    <td className="px-6 py-4"><span className="font-mono text-xs bg-slate-100 text-slate-800 px-2 py-1 rounded-lg font-bold">Frontend Development</span></td>
-                    <td className="px-6 py-4"><span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border bg-emerald-50 text-emerald-700 border-emerald-200"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />Present</span></td>
+                    <td className="px-6 py-4 text-xs text-slate-700 font-semibold">10 Aug 2026</td>
+                    <td className="px-6 py-4"><span className="font-mono text-xs bg-[#e6f1e6] text-[#008751] border border-[#c9edcc] px-2.5 py-1 rounded-lg font-bold">Frontend Track</span></td>
+                    <td className="px-6 py-4"><span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border bg-[#e6f1e6] text-[#008751] border-[#c9edcc]"><span className="w-1.5 h-1.5 rounded-full bg-[#008751]" />Present</span></td>
                   </tr>
                   <tr className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4 text-sm text-slate-700 font-medium">08 Aug 2026</td>
-                    <td className="px-6 py-4"><span className="font-mono text-xs bg-slate-100 text-slate-800 px-2 py-1 rounded-lg font-bold">React Development</span></td>
-                    <td className="px-6 py-4"><span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border bg-emerald-50 text-emerald-700 border-emerald-200"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />Present</span></td>
+                    <td className="px-6 py-4 text-xs text-slate-700 font-semibold">08 Aug 2026</td>
+                    <td className="px-6 py-4"><span className="font-mono text-xs bg-[#e6f1e6] text-[#008751] border border-[#c9edcc] px-2.5 py-1 rounded-lg font-bold">Software Masterclass</span></td>
+                    <td className="px-6 py-4"><span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border bg-[#e6f1e6] text-[#008751] border-[#c9edcc]"><span className="w-1.5 h-1.5 rounded-full bg-[#008751]" />Present</span></td>
                   </tr>
                 </>
               )}
@@ -206,18 +204,16 @@ function TeacherDashboard() {
     profile?.full_name ||
     user?.user_metadata?.full_name ||
     user?.email?.split("@")[0] ||
-    "Teacher";
+    "Instructor";
 
   useEffect(() => {
     async function loadTeacherData() {
       try {
         setLoading(true);
 
-        // Fetch students count
         const students = await fetchStudents();
         setStudentCount(students?.length || 0);
 
-        // Fetch attendance_sessions
         const { data: sessions, error } = await supabase
           .from("attendance_sessions")
           .select("*")
@@ -239,19 +235,20 @@ function TeacherDashboard() {
   return (
     <div className="space-y-6">
       {/* Teacher Banner */}
-      <div className="bg-slate-900 text-white p-6 rounded-2xl shadow-md flex items-center justify-between border border-slate-800">
-        <div>
-          <span className="bg-violet-500/20 border border-violet-500/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-violet-300">
+      <div className="bg-[#20203C] text-white p-6 sm:p-8 rounded-3xl shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800 relative overflow-hidden">
+        <div className="absolute right-0 top-0 w-64 h-64 bg-[#F0A901]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="relative z-10">
+          <span className="bg-[#F0A901]/20 border border-[#F0A901]/40 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-[#F0A901]">
             🏫 Instructor Portal
           </span>
-          <h2 className="text-3xl font-extrabold mt-2">Welcome, {teacherName} 👋</h2>
-          <p className="text-slate-400 mt-1 text-sm max-w-xl">
-            Generate QR codes for live attendance sessions, monitor student enrollments and analytics.
+          <h2 className="text-2xl sm:text-3xl font-extrabold mt-3 text-white">Welcome, {teacherName} 👋</h2>
+          <p className="text-slate-300 mt-1.5 text-xs sm:text-sm max-w-xl leading-relaxed">
+            Generate QR codes for live cohort sessions, monitor fellow enrollments and attendance analytics.
           </p>
         </div>
         <Link
           to="/GenerateQR"
-          className="hidden sm:inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-500 text-white px-5 py-3 rounded-xl font-bold transition shadow-lg shadow-violet-900/40"
+          className="relative z-10 self-stretch sm:self-auto inline-flex items-center justify-center gap-2 bg-[#008751] hover:bg-[#26a65b] text-white px-5 py-3 rounded-2xl font-bold text-xs sm:text-sm transition shadow-lg shadow-emerald-950/40"
         >
           ⚡ Generate QR Session
         </Link>
@@ -259,53 +256,53 @@ function TeacherDashboard() {
 
       {/* Teacher Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-          <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Enrolled Students</p>
-          <h3 className="text-3xl font-extrabold text-slate-900 mt-2">{studentCount > 0 ? studentCount : "12"}</h3>
-          <div className="w-8 h-1 bg-violet-500 rounded mt-2" />
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5">
+          <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Enrolled Fellows</p>
+          <h3 className="text-3xl font-extrabold text-[#062324] mt-2">{studentCount > 0 ? studentCount : "12"}</h3>
+          <div className="w-8 h-1 bg-[#008751] rounded mt-2" />
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-          <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">QR Sessions Created</p>
-          <h3 className="text-3xl font-extrabold text-indigo-600 mt-2">{sessionCount > 0 ? sessionCount : "8"}</h3>
-          <div className="w-8 h-1 bg-indigo-400 rounded mt-2" />
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5">
+          <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Sessions Created</p>
+          <h3 className="text-3xl font-extrabold text-[#008751] mt-2">{sessionCount > 0 ? sessionCount : "8"}</h3>
+          <div className="w-8 h-1 bg-[#56c760] rounded mt-2" />
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5">
           <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">Attendance Avg</p>
-          <h3 className="text-3xl font-extrabold text-emerald-600 mt-2">94%</h3>
-          <div className="w-8 h-1 bg-emerald-400 rounded mt-2" />
+          <h3 className="text-3xl font-extrabold text-[#26a65b] mt-2">94%</h3>
+          <div className="w-8 h-1 bg-[#26a65b] rounded mt-2" />
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5">
           <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">System Status</p>
           <div className="flex items-center gap-2 mt-3">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <h3 className="text-base font-bold text-emerald-600">Active</h3>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#008751] animate-pulse"></span>
+            <h3 className="text-base font-bold text-[#008751]">Active</h3>
           </div>
-          <div className="w-8 h-1 bg-emerald-300 rounded mt-2" />
+          <div className="w-8 h-1 bg-[#c9edcc] rounded mt-2" />
         </div>
       </div>
 
       {/* Quick Teacher Actions */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-        <h3 className="text-base font-bold text-slate-900 mb-4">Instructor Control Center</h3>
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6">
+        <h3 className="text-sm font-extrabold text-[#062324] uppercase tracking-wider mb-4">Instructor Controls</h3>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Link
             to="/GenerateQR"
-            className="bg-violet-600 hover:bg-violet-700 text-white p-4 rounded-xl text-center font-bold transition shadow-sm shadow-violet-100 flex items-center justify-center gap-2"
+            className="bg-[#008751] hover:bg-[#26a65b] text-white p-4 rounded-2xl text-center font-bold text-xs sm:text-sm transition shadow-md shadow-emerald-950/10 flex items-center justify-center gap-2"
           >
             ⚡ Generate New QR Code
           </Link>
           <Link
             to="/students"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white p-4 rounded-xl text-center font-bold transition shadow-sm shadow-indigo-100 flex items-center justify-center gap-2"
+            className="bg-[#20203C] hover:bg-[#292D4A] text-white p-4 rounded-2xl text-center font-bold text-xs sm:text-sm transition shadow-md flex items-center justify-center gap-2"
           >
-            👨‍🎓 Manage Students
+            👨‍🎓 Fellow Roster
           </Link>
           <Link
             to="/reports"
-            className="bg-slate-700 hover:bg-slate-800 text-white p-4 rounded-xl text-center font-bold transition shadow-sm flex items-center justify-center gap-2"
+            className="bg-slate-700 hover:bg-slate-800 text-white p-4 rounded-2xl text-center font-bold text-xs sm:text-sm transition shadow-md flex items-center justify-center gap-2"
           >
             📈 View Analytics
           </Link>
@@ -313,12 +310,12 @@ function TeacherDashboard() {
       </div>
 
       {/* Created QR Sessions */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-5 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-          <h3 className="text-base font-bold text-slate-900">Recent Attendance Sessions</h3>
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div className="p-5 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+          <h3 className="text-sm font-extrabold text-[#062324] uppercase tracking-wider">Created Sessions</h3>
           <Link
             to="/GenerateQR"
-            className="text-sm font-semibold text-violet-600 hover:underline"
+            className="text-xs font-bold text-[#008751] hover:underline"
           >
             + New Session
           </Link>
@@ -334,12 +331,12 @@ function TeacherDashboard() {
               </tr>
             </thead>
 
-            <tbody className="divide-y divide-slate-50">
+            <tbody className="divide-y divide-slate-100">
               {loading ? (
                 <tr>
                   <td colSpan="3" className="px-6 py-8 text-center text-slate-400">
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="w-4 h-4 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
+                    <div className="flex items-center justify-center gap-2 text-xs">
+                      <div className="w-4 h-4 border-2 border-[#008751] border-t-transparent rounded-full animate-spin" />
                       Loading sessions...
                     </div>
                   </td>
@@ -348,10 +345,10 @@ function TeacherDashboard() {
                 recentSessions.slice(0, 5).map((s) => (
                   <tr key={s.id} className="hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-4">
-                      <span className="font-mono text-xs bg-violet-50 text-violet-800 border border-violet-200 px-2.5 py-1 rounded-lg font-bold">{s.session_code}</span>
+                      <span className="font-mono text-xs bg-[#e6f1e6] text-[#008751] border border-[#c9edcc] px-2.5 py-1 rounded-lg font-bold">{s.session_code}</span>
                     </td>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-800">{s.title || "3MTT Attendance"}</td>
-                    <td className="px-6 py-4 text-sm text-slate-400">
+                    <td className="px-6 py-4 text-xs font-semibold text-slate-800">{s.title || "3MTT Attendance"}</td>
+                    <td className="px-6 py-4 text-xs text-slate-500">
                       {s.created_at ? new Date(s.created_at).toLocaleString() : "Just now"}
                     </td>
                   </tr>
@@ -359,14 +356,14 @@ function TeacherDashboard() {
               ) : (
                 <>
                   <tr className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4"><span className="font-mono text-xs bg-violet-50 text-violet-800 border border-violet-200 px-2.5 py-1 rounded-lg font-bold">3MTT-LX90A</span></td>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-800">Frontend Development Track</td>
-                    <td className="px-6 py-4 text-sm text-slate-400">Today, 09:00 AM</td>
+                    <td className="px-6 py-4"><span className="font-mono text-xs bg-[#e6f1e6] text-[#008751] border border-[#c9edcc] px-2.5 py-1 rounded-lg font-bold">3MTT-LX90A</span></td>
+                    <td className="px-6 py-4 text-xs font-semibold text-slate-800">Frontend Development Track</td>
+                    <td className="px-6 py-4 text-xs text-slate-500">Today, 09:00 AM</td>
                   </tr>
                   <tr className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4"><span className="font-mono text-xs bg-violet-50 text-violet-800 border border-violet-200 px-2.5 py-1 rounded-lg font-bold">3MTT-LX88B</span></td>
-                    <td className="px-6 py-4 text-sm font-medium text-slate-800">React & Database Masterclass</td>
-                    <td className="px-6 py-4 text-sm text-slate-400">Yesterday, 02:00 PM</td>
+                    <td className="px-6 py-4"><span className="font-mono text-xs bg-[#e6f1e6] text-[#008751] border border-[#c9edcc] px-2.5 py-1 rounded-lg font-bold">3MTT-LX88B</span></td>
+                    <td className="px-6 py-4 text-xs font-semibold text-slate-800">React & Database Masterclass</td>
+                    <td className="px-6 py-4 text-xs text-slate-500">Yesterday, 02:00 PM</td>
                   </tr>
                 </>
               )}
