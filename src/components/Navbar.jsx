@@ -12,7 +12,12 @@ export default function Navbar() {
 
   const displayName = profile?.full_name || user?.email;
   const initials = displayName
-    ? displayName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+    ? displayName
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
     : "U";
 
   return (
@@ -21,7 +26,7 @@ export default function Navbar() {
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white text-sm font-extrabold shadow">
-            3M
+            3MTT
           </div>
           <div>
             <div className="text-white font-extrabold text-sm tracking-tight leading-none">
