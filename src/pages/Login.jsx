@@ -10,9 +10,11 @@ export default function Login() {
     password: "",
   });
 
+  const [error, setError] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState("");
+  const [attempts, setAttempts] = React.useState(0);
+  const [lockoutUntil, setLockoutUntil] = React.useState(null);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -34,6 +36,14 @@ export default function Login() {
         });
 
       if (loginError) {
+        setAttempts(prev => {
+          const newAttempts = prev + 1;
+          if (newAttempts >= 5) {
+            setLockoutUntil(Date.now() + 2 * 60 * 1000);
+          }
+          return newAttempts;
+        });
+
         if (
           loginError.message
             ?.toLowerCase()
@@ -49,7 +59,8 @@ export default function Login() {
       if (!data.user) {
         throw new Error("Unable to log in. Please try again.");
       }
-
+      
+      setAttempts(0);
       navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
@@ -125,6 +136,12 @@ export default function Login() {
               <span>{error}</span>
             </div>
           )}
+          {lockoutUntil && Date.now() < lockoutUntil && (
+            <div className="bg-amber-50 border border-amber-200 text-amber-700 p-4 rounded-xl mb-4 text-sm flex gap-2.5">
+              <span className="mt-0.5">⏳</span>
+              <span>{`Too many attempts. Please wait ${Math.ceil((lockoutUntil - Date.now())/1000)} seconds.`}</span>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
@@ -180,11 +197,13 @@ export default function Login() {
             {/* Submit */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || (lockoutUntil && Date.now() < lockoutUntil)}
               className={`w-full py-3 rounded-xl text-white font-bold transition-all duration-200 shadow-md ${
                 loading
                   ? "bg-slate-400 cursor-not-allowed"
-                  : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-indigo-200 hover:shadow-lg"
+                  : (lockoutUntil && Date.now() < lockoutUntil)
+                    ? "bg-rose-400 cursor-not-allowed"
+                    : "bg-indigo-600 hover:bg-indigo-700 hover:shadow-indigo-200 hover:shadow-lg"
               }`}
             >
               {loading ? "Signing in..." : "Sign In →"}
