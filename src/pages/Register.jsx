@@ -103,8 +103,8 @@ export default function Register() {
       <div className="hidden lg:flex lg:w-2/5 bg-[#20203C] flex-col items-center justify-center px-12 relative overflow-hidden">
         <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-72 h-72 bg-[#008751]/20 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 text-center">
-          <div className="w-16 h-16 bg-[#008751] rounded-2xl flex items-center justify-center text-white text-2xl font-extrabold shadow-xl mx-auto mb-5 border border-emerald-400/20">
-            3M
+          <div className="w-16 h-16 bg-[#008751] rounded-2xl flex items-center justify-center text-white text-xl font-extrabold shadow-xl mx-auto mb-5 border border-emerald-400/20">
+            3MTT
           </div>
           <h1 className="text-3xl font-extrabold text-white leading-tight">
             Join 3MTT
@@ -134,8 +134,8 @@ export default function Register() {
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-[#008751] rounded-xl flex items-center justify-center text-white font-extrabold text-sm shadow">
-              3M
+            <div className="px-2.5 py-1 bg-[#008751] rounded-xl flex items-center justify-center text-white font-extrabold text-xs shadow">
+              3MTT
             </div>
             <div>
               <div className="font-extrabold text-slate-900 text-sm">3MTT Nigeria</div>

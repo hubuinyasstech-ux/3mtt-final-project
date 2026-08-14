@@ -78,8 +78,8 @@ export default function Login() {
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#008751]/20 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 text-center">
-          <div className="w-20 h-20 bg-[#008751] rounded-3xl flex items-center justify-center text-white text-3xl font-extrabold shadow-2xl border border-emerald-400/20 mx-auto mb-6">
-            3M
+          <div className="w-20 h-20 bg-[#008751] rounded-3xl flex items-center justify-center text-white text-xl font-extrabold shadow-2xl border border-emerald-400/20 mx-auto mb-6">
+            3MTT
           </div>
           <h1 className="text-4xl font-extrabold text-white leading-tight">
             3MTT Nigeria
@@ -113,8 +113,8 @@ export default function Login() {
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3 mb-8">
-            <div className="w-10 h-10 bg-[#008751] rounded-xl flex items-center justify-center text-white font-extrabold text-sm shadow">
-              3M
+            <div className="px-2.5 py-1 bg-[#008751] rounded-xl flex items-center justify-center text-white font-extrabold text-xs shadow">
+              3MTT
             </div>
             <div>
               <div className="font-extrabold text-slate-900 text-sm">3MTT Nigeria</div>

@@ -53,8 +53,8 @@ export default function GenerateQR() {
       <header className="bg-[#20203C] border-b border-slate-700/50 text-white px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-[#008751] rounded-xl flex items-center justify-center font-extrabold text-sm shadow-md border border-emerald-400/20">
-              3M
+            <div className="px-2.5 py-1.5 bg-[#008751] rounded-xl flex items-center justify-center font-extrabold text-xs shadow-md border border-emerald-400/20">
+              3MTT
             </div>
             <div>
               <h1 className="text-lg font-bold text-white leading-none">3MTT QR Generator</h1>

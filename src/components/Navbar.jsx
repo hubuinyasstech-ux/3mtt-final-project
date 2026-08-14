@@ -20,8 +20,8 @@ export default function Navbar() {
       {/* Brand */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 bg-[#008751] rounded-xl flex items-center justify-center text-white text-sm font-extrabold shadow-md border border-emerald-400/20">
-            3M
+          <div className="px-2.5 py-1.5 bg-[#008751] rounded-xl flex items-center justify-center text-white text-xs font-extrabold shadow-md border border-emerald-400/20">
+            3MTT
           </div>
           <div>
             <div className="text-white font-extrabold text-sm tracking-tight leading-none flex items-center gap-1.5">
