@@ -8,6 +8,7 @@ export default function Attendance() {
   const { user, role } = useAuth();
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     async function loadData() {
@@ -55,6 +56,23 @@ export default function Attendance() {
   ];
 
   const displayRecords = records.length > 0 ? records : defaultRecords;
+
+  // Filter records based on search query
+  const filteredRecords = displayRecords.filter((rec) => {
+    const term = searchTerm.toLowerCase().trim();
+    if (!term) return true;
+    const sessionCode = (rec.session_code || "").toLowerCase();
+    const studentId = (rec.student_id || "").toLowerCase();
+    const status = (rec.status || "").toLowerCase();
+    const date = rec.created_at ? new Date(rec.created_at).toLocaleDateString().toLowerCase() : "";
+    return (
+      sessionCode.includes(term) ||
+      studentId.includes(term) ||
+      status.includes(term) ||
+      date.includes(term)
+    );
+  });
+
   const presentCount = displayRecords.filter((r) => r.status === "Present").length;
   const absentCount = displayRecords.filter((r) => r.status === "Absent").length;
   const totalClasses = displayRecords.length;
@@ -62,6 +80,37 @@ export default function Attendance() {
     totalClasses > 0 ? Math.round((presentCount / totalClasses) * 100) : 0;
 
   const isTeacher = role === "teacher";
+
+  // Safe CSV export function
+  const handleExportCSV = () => {
+    if (!filteredRecords.length) return;
+    const headers = ["Index", "Date_Time", "Session_Code", "Status"];
+    if (isTeacher) headers.splice(3, 0, "Fellow_ID");
+
+    const rows = filteredRecords.map((rec, index) => {
+      const dateTime = rec.created_at ? `"${new Date(rec.created_at).toLocaleString()}"` : '"Recently"';
+      const code = `"${rec.session_code || "3MTT-TRACK"}"`;
+      const status = `"${rec.status || "Present"}"`;
+      if (isTeacher) {
+        const fellowId = `"${rec.student_id || "Fellow"}"`;
+        return [index + 1, dateTime, code, fellowId, status].join(",");
+      }
+      return [index + 1, dateTime, code, status].join(",");
+    });
+
+    const csvContent = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute(
+      "download",
+      `3MTT_Attendance_Report_${new Date().toISOString().split("T")[0]}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -89,15 +138,26 @@ export default function Attendance() {
 
       <main className="max-w-7xl mx-auto p-6 space-y-6">
         {/* Page title */}
-        <div>
-          <h2 className="text-2xl font-extrabold text-[#062324]">
-            {isTeacher ? "Fellow Attendance History" : "My Course Attendance"}
-          </h2>
-          <p className="text-slate-500 text-xs sm:text-sm mt-1">
-            {isTeacher
-              ? "Monitor live attendance logs recorded across all QR sessions."
-              : "View your scanned sessions and overall attendance completion rate."}
-          </p>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-extrabold text-[#062324]">
+              {isTeacher ? "Fellow Attendance History" : "My Course Attendance"}
+            </h2>
+            <p className="text-slate-500 text-xs sm:text-sm mt-1">
+              {isTeacher
+                ? "Monitor live attendance logs recorded across all QR sessions."
+                : "View your scanned sessions and overall attendance completion rate."}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleExportCSV}
+            disabled={!filteredRecords.length}
+            className="bg-slate-900 hover:bg-[#20203C] disabled:opacity-50 text-white px-4 py-2.5 rounded-xl font-bold text-xs transition shadow-md flex items-center gap-2"
+          >
+            📥 Export CSV Report
+          </button>
         </div>
 
         {/* Stats cards */}
@@ -137,25 +197,42 @@ export default function Attendance() {
           </div>
         </div>
 
-        {/* Table */}
+        {/* Table Container */}
         <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-          <div className="p-5 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-extrabold text-[#062324] uppercase tracking-wider">
-                Attendance Records Log
-              </h3>
-              <p className="text-slate-500 text-xs mt-0.5">
-                {displayRecords.length} record{displayRecords.length !== 1 ? "s" : ""} recorded
-              </p>
+          {/* Header Controls */}
+          <div className="p-5 border-b border-slate-100 bg-slate-50/60 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div>
+                <h3 className="text-sm font-extrabold text-[#062324] uppercase tracking-wider">
+                  Attendance Records Log
+                </h3>
+                <p className="text-slate-500 text-xs mt-0.5">
+                  Showing {filteredRecords.length} of {displayRecords.length} records
+                </p>
+              </div>
             </div>
-            {!isTeacher && (
-              <Link
-                to="/ScanQR"
-                className="bg-[#008751] hover:bg-[#26a65b] text-white px-4 py-2 rounded-xl font-bold text-xs transition shadow-md shadow-emerald-950/10"
-              >
-                + Scan QR Code
-              </Link>
-            )}
+
+            <div className="flex items-center gap-3">
+              {/* Search Filter Input */}
+              <div className="relative flex-1 sm:flex-none sm:w-64">
+                <input
+                  type="text"
+                  placeholder="🔍 Search session, ID, date..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full border border-slate-200 bg-white px-3.5 py-2 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#008751] transition"
+                />
+              </div>
+
+              {!isTeacher && (
+                <Link
+                  to="/ScanQR"
+                  className="bg-[#008751] hover:bg-[#26a65b] text-white px-4 py-2 rounded-xl font-bold text-xs transition shadow-md shadow-emerald-950/10 whitespace-nowrap"
+                >
+                  + Scan QR Code
+                </Link>
+              )}
+            </div>
           </div>
 
           <div className="overflow-x-auto">
@@ -192,8 +269,8 @@ export default function Attendance() {
                       </div>
                     </td>
                   </tr>
-                ) : (
-                  displayRecords.map((record, index) => (
+                ) : filteredRecords.length > 0 ? (
+                  filteredRecords.map((record, index) => (
                     <tr
                       key={record.id || index}
                       className="hover:bg-slate-50/80 transition-colors duration-100"
@@ -236,6 +313,12 @@ export default function Attendance() {
                       </td>
                     </tr>
                   ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="px-6 py-8 text-center text-slate-400 text-xs">
+                      No matching attendance records found.
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>

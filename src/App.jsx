@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ScanQR from "./pages/ScanQR";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -94,6 +94,9 @@ function App() {
           </ProtectedRoute>
         }
       />
+
+      {/* Fallback Catch-all Route */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

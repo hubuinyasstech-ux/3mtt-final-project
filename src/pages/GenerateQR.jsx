@@ -6,14 +6,17 @@ import { supabase } from "../service/supabase";
 export default function GenerateQR() {
   const [title, setTitle] = useState("3MTT Cohort Session");
   const [sessionId, setSessionId] = useState("");
+  const [sessionTime, setSessionTime] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const generateSession = async (e) => {
     e?.preventDefault();
     setLoading(true);
     setError("");
     setSessionId("");
+    setCopied(false);
 
     try {
       const newSessionCode = "3MTT-" + Date.now().toString(36).toUpperCase();
@@ -34,12 +37,20 @@ export default function GenerateQR() {
       }
 
       setSessionId(data.session_code);
+      setSessionTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
     } catch (err) {
       console.error("QR session error:", err);
       setError(err.message || "Unable to create attendance session in database.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCopyCode = () => {
+    if (!sessionId) return;
+    navigator.clipboard.writeText(sessionId);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 3000);
   };
 
   const qrPayload = JSON.stringify({
@@ -136,14 +147,24 @@ export default function GenerateQR() {
                 Active Session: {title}
               </h3>
 
-              <div className="inline-flex items-center gap-2 bg-[#e6f1e6] text-[#008751] border border-[#c9edcc] px-4 py-2 rounded-xl mt-3 font-mono font-bold text-xs sm:text-sm">
-                <span className="text-slate-500">Session Code:</span>
-                <span className="text-[#008751]">{sessionId}</span>
+              <div className="flex items-center justify-center gap-2 mt-3">
+                <div className="inline-flex items-center gap-2 bg-[#e6f1e6] text-[#008751] border border-[#c9edcc] px-4 py-2 rounded-xl font-mono font-bold text-xs sm:text-sm">
+                  <span className="text-slate-500">Code:</span>
+                  <span className="text-[#008751]">{sessionId}</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleCopyCode}
+                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1 border border-slate-200"
+                >
+                  {copied ? "✅ Copied!" : "📋 Copy Code"}
+                </button>
               </div>
 
               <p className="text-xs sm:text-sm text-[#008751] font-bold mt-4 flex items-center justify-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#008751] animate-pulse"></span>
-                Live Session Ready for Scanning
+                Live Session Ready for Scanning {sessionTime && `(Generated at ${sessionTime})`}
               </p>
 
               <p className="text-xs text-slate-500 mt-1">
